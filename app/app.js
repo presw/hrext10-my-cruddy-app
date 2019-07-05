@@ -6,7 +6,7 @@
 
 */
 
-//localStorage functions
+// localStorage functions
 var createItem = function(key, value) {
   return window.localStorage.setItem(key, value);
 }
@@ -23,6 +23,11 @@ var clearDatabase = function() {
   return window.localStorage.clear();
 }
 
+var keyExists = function(key) {
+  return window.localStorage.getItem(key) !== null
+}
+
+// Jquery functions
 var showDatabaseContents = function() {
   $('tbody').html('');
 
@@ -30,10 +35,6 @@ var showDatabaseContents = function() {
     var key = window.localStorage.key(i);
     $('tbody').append(`<tr><td>${key}</td><td>${window.localStorage.getItem(key)}</td></tr>`)
   }
-}
-
-var keyExists = function(key) {
-  return window.localStorage.getItem(key) !== null
 }
 
 var getKeyInput = function() {
@@ -49,6 +50,7 @@ var resetInputs = function() {
   $('.value').val('');
 }
 
+// Document ready
 $(document).ready(function() {
   showDatabaseContents();
 

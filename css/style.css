@@ -35,3 +35,14 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 .task-row {
   margin-bottom: 10px;
 }
+
+input[type=checkbox]
+{
+  /* Larger Checkboxes */
+  -ms-transform: scale(1.25); /* IE */
+  -moz-transform: scale(1.25); /* FF */
+  -webkit-transform: scale(1.25); /* Safari and Chrome */
+  -o-transform: scale(1.25); /* Opera */
+  padding: 10px;
+  margin-bottom: 3px;
+}

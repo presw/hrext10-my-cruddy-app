@@ -7,6 +7,7 @@
 */
 
 // localStorage functions
+
 var createItem = function(key, value) {
   return window.localStorage.setItem(key, value);
 }
@@ -23,9 +24,29 @@ var clearDatabase = function() {
   return window.localStorage.clear();
 }
 
-var keyExists = function(key) {
-  return window.localStorage.getItem(key) !== null
+var getKeyValue = function(key) {
+  return window.localStorage.getItem(key);
 }
+
+let taskCounter = function() {
+  let taskCount;
+  if (getKeyValue('taskCount') !== null) {
+    console.log('if');
+    taskCount = getKeyValue('taskCount');
+  } else {
+    console.log("else");
+    taskCount = 0;
+    createItem('taskCount', 0);
+  }
+  return function() {
+    let taskNum = 'task' + taskCount;
+    taskCount++;
+    updateItem('taskCount', taskCount);
+    return taskNum;
+  }
+}
+
+let taskNum = taskCounter();
 
 // Jquery functions
 var showDatabaseContents = function() {
@@ -50,9 +71,26 @@ var resetInputs = function() {
   $('.value').val('');
 }
 
+var addTaskToBody = function() {
+  var taskName = getKeyInput();
+  $('.task-container').prepend(`<div class="input-group mb-2 task-row">` +
+    `<div class="input-group-prepend"><div class="input-group-text checkbox">` +
+    `<input type="checkbox" aria-label="Checkbox for following text input"></div>` +
+    `</div><div type="text" class="form-control task-name">${taskName}</div></div>`);
+}
+
 // Document ready
 $(document).ready(function() {
   showDatabaseContents();
+
+  $('.key').on('keypress', function(event) {
+    console.log('hello');
+    if (event.which === 13) {
+      createItem(taskNum(), getKeyInput());
+      addTaskToBody();
+      resetInputs();
+    }
+  })
 
   $('.create').click(function() {
     if (getKeyInput() !== '' && getValueInput() !== '') {

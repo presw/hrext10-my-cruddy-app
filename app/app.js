@@ -31,10 +31,8 @@ var getKeyValue = function(key) {
 let taskCounter = function() {
   let taskCount;
   if (getKeyValue('taskCount') !== null) {
-    console.log('if');
     taskCount = getKeyValue('taskCount');
   } else {
-    console.log("else");
     taskCount = 0;
     createItem('taskCount', 0);
   }
@@ -46,15 +44,35 @@ let taskCounter = function() {
   }
 }
 
+let makeTask = function() {
+  let name = getKeyInput();
+  let taskObject = {
+    name: name,
+    complete: false,
+    created: Date.now()
+  }
+  return taskObject;
+}
+
 let taskNum = taskCounter();
 
 // Jquery functions
+var addTaskToBody = function(taskName) {
+  $('.task-container').prepend(`<div class="input-group mb-2 task-row">` +
+    `<div class="input-group-prepend"><div class="input-group-text checkbox">` +
+    `<input type="checkbox" aria-label="Checkbox for following text input"></div>` +
+    `</div><div type="text" class="form-control task-name">${taskName}</div></div>`);
+}
+
 var showDatabaseContents = function() {
-  $('tbody').html('');
+  $('.task-container').html('');
 
   for (var i = 0; i < window.localStorage.length; i++) {
-    var key = window.localStorage.key(i);
-    $('tbody').append(`<tr><td>${key}</td><td>${window.localStorage.getItem(key)}</td></tr>`)
+    let key = window.localStorage.key(i);
+    let value = JSON.parse(getKeyValue(key));
+    if (value.complete === false) {
+      addTaskToBody(value.name);
+    }
   }
 }
 
@@ -71,8 +89,7 @@ var resetInputs = function() {
   $('.value').val('');
 }
 
-var addTaskToBody = function() {
-  var taskName = getKeyInput();
+var addTaskToBody = function(taskName) {
   $('.task-container').prepend(`<div class="input-group mb-2 task-row">` +
     `<div class="input-group-prepend"><div class="input-group-text checkbox">` +
     `<input type="checkbox" aria-label="Checkbox for following text input"></div>` +
@@ -84,11 +101,16 @@ $(document).ready(function() {
   showDatabaseContents();
 
   $('.key').on('keypress', function(event) {
-    console.log('hello');
     if (event.which === 13) {
-      createItem(taskNum(), getKeyInput());
-      addTaskToBody();
-      resetInputs();
+      if (getKeyInput() !== '') {
+        let task = makeTask();
+        addTaskToBody(task.name);
+        task = JSON.stringify(task);
+        createItem(taskNum(), task);
+        resetInputs();
+      } else {
+        alert('Please enter a task.');
+      }
     }
   })
 

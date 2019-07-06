@@ -112,6 +112,14 @@ $(document).ready(function() {
         alert('Please enter a task.');
       }
     }
+  });
+
+  $(document).on('click', 'input[type="checkbox"]', function() {
+    if (this.checked) {
+      $(this).offsetParent().wrap('<s></s>');
+    } else {
+      $(this).offsetParent().unwrap();
+    }
   })
 
   $('.create').click(function() {

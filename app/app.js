@@ -8,24 +8,33 @@
 
 // localStorage functions
 
-var createItem = function(key, value) {
+let createItem = function(key, value) {
   return window.localStorage.setItem(key, value);
 }
 
-var updateItem = function(key, value) {
+let updateItem = function(key, value) {
   return window.localStorage.setItem(key, value);
 }
 
-var deleteItem = function(key) {
+let deleteItem = function(key) {
   return window.localStorage.removeItem(key);
 }
 
-var clearDatabase = function() {
+let clearDatabase = function() {
   return window.localStorage.clear();
 }
 
-var getKeyValue = function(key) {
+let getKeyValue = function(key) {
   return window.localStorage.getItem(key);
+}
+
+let getKeyObject = function(key) {
+  let result = getKeyValue(key);
+  if (key !== 'taskCount') {
+    return JSON.parse(result);
+  } else {
+    return result;
+  }
 }
 
 let taskCounter = function() {
@@ -57,43 +66,36 @@ let makeTask = function() {
 let taskNum = taskCounter();
 
 // Jquery functions
-var addTaskToBody = function(taskName) {
+let addTaskToBody = function(taskId, taskName) {
   $('.task-container').prepend(`<div class="input-group mb-2 task-row">` +
     `<div class="input-group-prepend"><div class="input-group-text checkbox">` +
     `<input type="checkbox" aria-label="Checkbox for following text input"></div>` +
-    `</div><div type="text" class="form-control task-name">${taskName}</div></div>`);
+    `</div><div type="text" id="${taskId}" class="form-control task-name">${taskName}</div></div>`);
 }
 
-var showDatabaseContents = function() {
+let showDatabaseContents = function() {
   $('.task-container').html('');
 
   for (var i = 0; i < window.localStorage.length; i++) {
     let key = window.localStorage.key(i);
-    let value = JSON.parse(getKeyValue(key));
+    let value = getKeyObject(key);
     if (value.complete === false) {
-      addTaskToBody(value.name);
+      addTaskToBody(key, value.name);
     }
   }
 }
 
-var getKeyInput = function() {
+let getKeyInput = function() {
   return $('.key').val();
 }
 
-var getValueInput = function() {
+let getValueInput = function() {
   return $('.value').val();
 }
 
-var resetInputs = function() {
+let resetInputs = function() {
   $('.key').val('');
   $('.value').val('');
-}
-
-var addTaskToBody = function(taskName) {
-  $('.task-container').prepend(`<div class="input-group mb-2 task-row">` +
-    `<div class="input-group-prepend"><div class="input-group-text checkbox">` +
-    `<input type="checkbox" aria-label="Checkbox for following text input"></div>` +
-    `</div><div type="text" class="form-control task-name">${taskName}</div></div>`);
 }
 
 // Document ready
@@ -104,9 +106,10 @@ $(document).ready(function() {
     if (event.which === 13) {
       if (getKeyInput() !== '') {
         let task = makeTask();
-        addTaskToBody(task.name);
+        let id = taskNum();
+        addTaskToBody(id, task.name);
         task = JSON.stringify(task);
-        createItem(taskNum(), task);
+        createItem(id, task);
         resetInputs();
       } else {
         alert('Please enter a task.');
@@ -115,11 +118,17 @@ $(document).ready(function() {
   });
 
   $(document).on('click', 'input[type="checkbox"]', function() {
+    let taskId = $(this).offsetParent()[0].childNodes[1].id;
+    let task = getKeyObject(taskId);
     if (this.checked) {
+      task['complete'] = true;
       $(this).offsetParent().wrap('<s></s>');
     } else {
+      task['complete'] = false;
       $(this).offsetParent().unwrap();
     }
+    task = JSON.stringify(task);
+    updateItem(taskId, task);
   })
 
   $('.create').click(function() {

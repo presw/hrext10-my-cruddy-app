@@ -14,12 +14,27 @@
 <body class="m-3 body">
   <div class="container">
     <header class="header">Welcome to Tasks!</header>
+    <!-- Task input field -->
     <div class="input-group col-sm-9">
       <div class="input-group-prepend">
         <label class="input-group-text enter-task">Add Task</label>
       </div>
       <input class="key form-control" type="text">
     </div>
+    <div class="list-manipulations">
+      <div class="show-completed">
+        <div class="show-completed-text"><h6>Show completed tasks:</h6></div>
+        <div id="show-completed-switch">
+          <!-- NOTE: consider appending on doc creation -->
+          <label class="switch">
+            <input id="completed-switch" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks appear below here -->
     <div class="task-container"></div>
       <div class="input-group mb-2 task-row">
         <div class="input-group-prepend">

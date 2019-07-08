@@ -36,6 +36,37 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   margin-bottom: 10px;
 }
 
+.show-completed {
+  margin: 10px;
+}
+
+.list-manipulations {
+  display: flex;
+}
+
+#show-completed-switch {
+  margin-bottom: -5px;
+  -ms-transform: scale(0.75); /* IE */
+  -moz-transform: scale(0.75); /* FF */
+  -webkit-transform: scale(0.75); /* Safari and Chrome */
+  -o-transform: scale(0.75); /* Opera */
+}
+
+.show-completed-text {
+  margin-top: 5px;
+}
+
+.show-completed {
+  display: flex;
+  border: 2px solid black;
+  padding-left: 10px;
+  border-radius: 34px;
+  align-content: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+}
+
 input[type=checkbox]
 {
   /* Larger Checkboxes */

@@ -37,6 +37,8 @@ let getKeyObject = function(key) {
   }
 }
 
+// Setup
+
 let taskCounter = function() {
   let taskCount;
   if (getKeyValue('taskCount') !== null) {
@@ -65,12 +67,49 @@ let makeTask = function() {
 
 let taskNum = taskCounter();
 
+let taskCompleteKey = function() {
+  if (getKeyValue('showComplete') === undefined) {
+    createItem('showComplete', false);
+  }
+}();
+
 // Jquery functions
 let addTaskToBody = function(taskId, taskName) {
-  $('.task-container').prepend(`<div class="input-group mb-2 task-row">` +
+  let $task = `<div class="input-group mb-2 task-row">` +
     `<div class="input-group-prepend"><div class="input-group-text checkbox">` +
-    `<input type="checkbox" aria-label="Checkbox for following text input"></div>` +
-    `</div><div type="text" id="${taskId}" class="form-control task-name">${taskName}</div></div>`);
+    `<input id="task-checkbox" type="checkbox" aria-label="Checkbox for following text input"></div>` +
+    `</div><div type="text" id="${taskId}" class="form-control task-name">${taskName}</div></div>`;
+  let value = getKeyObject(taskId);
+  let isTask = function() {
+    if (value.complete !== undefined) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  let isComplete = function() {
+    if (value.complete === true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  if (isTask()) {
+    if (isComplete()) {
+      $task = '<s>' + $task + '</s>';
+    }
+    $('.task-container').prepend($task);
+  } else {
+    return undefined;
+  }
+}
+
+let showCompleted = function() {
+  if (getKeyValue('showComplete') === 'true') {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 let showDatabaseContents = function() {
@@ -79,7 +118,9 @@ let showDatabaseContents = function() {
   for (var i = 0; i < window.localStorage.length; i++) {
     let key = window.localStorage.key(i);
     let value = getKeyObject(key);
-    if (value.complete === false) {
+    if (showCompleted()) {
+      addTaskToBody(key, value.name);
+    } else if (value.complete === false) {
       addTaskToBody(key, value.name);
     }
   }
@@ -100,8 +141,14 @@ let resetInputs = function() {
 
 // Document ready
 $(document).ready(function() {
+  (function() {
+    if (getKeyValue('showComplete') === 'true') {
+      document.querySelector('#completed-switch').checked = true;
+    }
+  })();
   showDatabaseContents();
 
+  // Enter key when focused on add task field
   $('.key').on('keypress', function(event) {
     if (event.which === 13) {
       if (getKeyInput() !== '') {
@@ -117,7 +164,9 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on('click', 'input[type="checkbox"]', function() {
+  // Clicking task checkbox
+  // TODO: Bug - tasks won't complete or uncomplete after toggling show completed
+  $('.checkbox').on('click', 'input[type="checkbox"]', function() {
     let taskId = $(this).offsetParent()[0].childNodes[1].id;
     let task = getKeyObject(taskId);
     if (this.checked) {
@@ -129,7 +178,16 @@ $(document).ready(function() {
     }
     task = JSON.stringify(task);
     updateItem(taskId, task);
-  })
+  });
+
+  $('#completed-switch').on('click', function() {
+    if (event.target.checked === true) {
+      updateItem('showComplete', true);
+    } else {
+      updateItem('showComplete', false);
+    }
+    showDatabaseContents();
+  });
 
   $('.create').click(function() {
     if (getKeyInput() !== '' && getValueInput() !== '') {

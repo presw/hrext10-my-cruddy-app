@@ -82,10 +82,11 @@ let addTaskToBody = function(taskId, taskName) {
   let taskObj = getKeyObject(taskId);
 
   if (taskObj.complete !== undefined) {
-    if (taskObj.complete === true) {
-      task = '<s>' + task + '</s>';
-    }
     $('.task-container').prepend(task);
+    if (taskObj.complete === true) {
+      $('#task-checkbox')[0].checked = true;
+      $('#' + taskId).offsetParent().wrap('<s></s>');
+    }
   } else {
     return undefined;
   }
@@ -144,8 +145,7 @@ $(document).ready(function() {
   });
 
   // Clicking task checkbox
-  // TODO: Bug - tasks won't complete or uncomplete after toggling show completed
-  $('.checkbox').on('click', 'input[type="checkbox"]', function() {
+  $('.task-container').on('click', '#task-checkbox', function() {
     let taskId = $(this).offsetParent()[0].childNodes[1].id;
     let task = getKeyObject(taskId);
     if (this.checked) {

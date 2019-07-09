@@ -67,48 +67,27 @@ let makeTask = function() {
 
 let taskNum = taskCounter();
 
-let taskCompleteKey = function() {
+(function() {
   if (getKeyValue('showComplete') === undefined) {
     createItem('showComplete', false);
   }
-}();
+})();
 
 // Jquery functions
 let addTaskToBody = function(taskId, taskName) {
-  let $task = `<div class="input-group mb-2 task-row">` +
+  let task = `<div class="input-group mb-2 task-row">` +
     `<div class="input-group-prepend"><div class="input-group-text checkbox">` +
     `<input id="task-checkbox" type="checkbox" aria-label="Checkbox for following text input"></div>` +
     `</div><div type="text" id="${taskId}" class="form-control task-name">${taskName}</div></div>`;
-  let value = getKeyObject(taskId);
-  let isTask = function() {
-    if (value.complete !== undefined) {
-      return true;
-    } else {
-      return false;
+  let taskObj = getKeyObject(taskId);
+
+  if (taskObj.complete !== undefined) {
+    if (taskObj.complete === true) {
+      task = '<s>' + task + '</s>';
     }
-  }
-  let isComplete = function() {
-    if (value.complete === true) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  if (isTask()) {
-    if (isComplete()) {
-      $task = '<s>' + $task + '</s>';
-    }
-    $('.task-container').prepend($task);
+    $('.task-container').prepend(task);
   } else {
     return undefined;
-  }
-}
-
-let showCompleted = function() {
-  if (getKeyValue('showComplete') === 'true') {
-    return true;
-  } else {
-    return false;
   }
 }
 
@@ -118,7 +97,7 @@ let showDatabaseContents = function() {
   for (var i = 0; i < window.localStorage.length; i++) {
     let key = window.localStorage.key(i);
     let value = getKeyObject(key);
-    if (showCompleted()) {
+    if (getKeyValue('showComplete') === 'true') {
       addTaskToBody(key, value.name);
     } else if (value.complete === false) {
       addTaskToBody(key, value.name);

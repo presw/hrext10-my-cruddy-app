@@ -9,10 +9,12 @@
 // localStorage functions
 
 let createItem = function(key, value) {
+  value = JSON.stringify(value);
   return window.localStorage.setItem(key, value);
 }
 
 let updateItem = function(key, value) {
+  value = JSON.stringify(value);
   return window.localStorage.setItem(key, value);
 }
 
@@ -55,8 +57,10 @@ let taskCounter = function() {
   }
 }
 
-let makeTask = function() {
-  let name = getKeyInput();
+let makeTask = function(name) {
+  if (name === undefined) {
+    let name = getKeyInput();
+  }
   let taskObject = {
     name: name,
     complete: false,
@@ -90,7 +94,20 @@ let addTaskToBody = function(taskId, taskName) {
   } else {
     return undefined;
   }
-}
+};
+
+(function() {
+  if (getKeyValue('hasIntroRun') === null) {
+    createItem('hasIntroRun', false);
+  }
+  if (getKeyValue('hasIntroRun') === 'false') {
+    let intro1 = makeTask('Type in the field above and press "enter" to create a task.')
+    let intro2 = makeTask('<-- Click the checkbox to complete a task.')
+    createItem(taskNum(), intro1);
+    createItem(taskNum(), intro2);
+    updateItem('hasIntroRun', true);
+  }
+})();
 
 let showDatabaseContents = function() {
   $('.task-container').html('');
@@ -104,20 +121,20 @@ let showDatabaseContents = function() {
       addTaskToBody(key, value.name);
     }
   }
-}
+};
 
 let getKeyInput = function() {
   return $('.key').val();
-}
+};
 
 let getValueInput = function() {
   return $('.value').val();
-}
+};
 
 let resetInputs = function() {
   $('.key').val('');
   $('.value').val('');
-}
+};
 
 // Document ready
 $(document).ready(function() {
@@ -135,7 +152,6 @@ $(document).ready(function() {
         let task = makeTask();
         let id = taskNum();
         addTaskToBody(id, task.name);
-        task = JSON.stringify(task);
         createItem(id, task);
         resetInputs();
       } else {
@@ -155,7 +171,6 @@ $(document).ready(function() {
       task['complete'] = false;
       $(this).offsetParent().unwrap();
     }
-    task = JSON.stringify(task);
     updateItem(taskId, task);
   });
 

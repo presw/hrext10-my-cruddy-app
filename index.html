@@ -18,7 +18,7 @@
     <div class="input-group col-sm-9">
       <div class="input-group-prepend">
         <button class="input-group-text enter-task">Add Task</button>
-        <div class="priority-dropdown">
+        <div class="priority-dropdown dropdown">
           <button class="set-priority-button">Priority</button>
             <div class="dropdown-content">
               <a id="urgent" href="#">Urgent</a>
@@ -30,11 +30,21 @@
       </div>
       <input class="key form-control" type="text">
     </div>
-    <div class="list-manipulations">
+    <div class="list-manipulation">
+      <div class="sort-by">
+        <div><h6>Sort by:</h6></div>
+        <div class="sort-by-dropdown dropdown">
+          <button class="sort-by-button">Date created</button>
+          <div class="dropdown-content">
+            <a class="sort-options" id="date-created" href="#">Date created</a>
+            <a class="sort-options" id="priority" href="#">Priority</a>
+          </div>
+        </div>
+      </div>
       <div class="show-completed">
         <div class="show-completed-text"><h6>Show completed tasks:</h6></div>
         <div id="show-completed-switch">
-          <!-- NOTE: consider appending on doc creation -->
+          <!-- NOTE: consider appending Switch on doc creation to avoid completed animation on refresh-->
           <label class="switch">
             <input id="completed-switch" type="checkbox">
             <span class="slider round"></span>
@@ -44,8 +54,7 @@
     </div>
 
     <!-- Tasks appear below here -->
-    <div class="task-container">
-    </div>
+    <div class="task-container"></div>
   <script src="app/app.js"></script>
 </body>
 </html>

@@ -39,6 +39,10 @@ let getKeyObject = function(key) {
   }
 }
 
+let setPriority = function(priority) {
+  return updateItem('setPriority', priority);
+}
+
 // Setup
 
 let taskCounter = function() {
@@ -59,11 +63,12 @@ let taskCounter = function() {
 
 let makeTask = function(name) {
   if (name === undefined) {
-    let name = getKeyInput();
+    name = getKeyInput();
   }
+  // let priority = getKeyValue('setPriority');
   let taskObject = {
     name: name,
-    priority: undefined,
+    priority: getKeyValue('setPriority'),
     complete: false,
     created: Date.now()
   }
@@ -80,14 +85,27 @@ let taskNum = taskCounter();
 
 // Jquery functions
 let addTaskToBody = function(taskId, taskName) {
-  let task = `<div class="input-group mb-2 task-row">` +
-    `<div class="input-group-prepend"><div class="input-group-text checkbox">` +
-    `<input id="task-checkbox" type="checkbox" aria-label="Checkbox for following text input"></div>` +
-    `</div><div type="text" id="${taskId}" class="form-control task-name">${taskName}</div></div>`;
   let taskObj = getKeyObject(taskId);
 
-  if (taskObj.complete !== undefined) {
-    $('.task-container').prepend(task);
+  let priorityColor = 'blue';
+  let priority = taskObj.priority;
+  if (priority === '0') {
+    priorityColor = 'dimgray';
+  } else if (priority === '2') {
+    priorityColor = 'darkorange';
+  } else if (priority === '3') {
+    priorityColor = 'red';
+  }
+
+  let $task = `<div class="input-group mb-2 task-row">` +
+    `<div class="input-group-prepend">` +
+    `<div class="input-group-text checkbox" style="background-color: ${priorityColor}">` +
+    `<input id="task-checkbox" type="checkbox" aria-label="Checkbox for following text input"></div>` +
+    `</div><div type="text" id="${taskId}" class="form-control task-name">${taskName}</div></div>`;
+
+  if (typeof taskObj.complete !== 'undefined') {
+    $('.task-container').prepend($task);
+
     if (taskObj.complete === true) {
       $('#task-checkbox')[0].checked = true;
       $('#' + taskId).offsetParent().wrap('<s></s>');
@@ -97,7 +115,11 @@ let addTaskToBody = function(taskId, taskName) {
   }
 };
 
+// Basic Page Setup
 (function() {
+  if (getKeyValue('setPriority') === null) {
+    createItem('setPriority', 1);
+  }
   if (getKeyValue('hasIntroRun') === null) {
     createItem('hasIntroRun', false);
   }
@@ -137,6 +159,14 @@ let resetInputs = function() {
   $('.value').val('');
 };
 
+let sortedArray = function(parameter) {
+  // Objective: Given a parameter, provide an ordered array of tasks based on parameter
+
+  // iterate through localStorage to obtain an array of tasks
+  // sort array of tasks based on parameter
+  // return array
+}
+
 // Document ready
 $(document).ready(function() {
   (function() {
@@ -148,18 +178,22 @@ $(document).ready(function() {
 
   $('#urgent').on('click', function() {
     $('.set-priority-button').text('Urgent').css('background-color', 'red');
+    setPriority(3);
   });
 
   $('#important').on('click', function() {
     $('.set-priority-button').text('Important').css('background-color', 'darkorange');
+    setPriority(2);
   });
 
   $('#standard').on('click', function() {
     $('.set-priority-button').text('Standard').css('background-color', 'blue');
+    setPriority(1);
   });
 
   $('#no-rush').on('click', function() {
     $('.set-priority-button').text('No rush').css('background-color', 'dimgray');
+    setPriority(0);
   });
 
   // Enter key when focused on add task field
@@ -168,8 +202,8 @@ $(document).ready(function() {
       if (getKeyInput() !== '') {
         let task = makeTask();
         let id = taskNum();
-        addTaskToBody(id, task.name);
         createItem(id, task);
+        addTaskToBody(id, task.name);
         resetInputs();
       } else {
         alert('Please enter a task.');

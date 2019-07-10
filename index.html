@@ -17,7 +17,16 @@
     <!-- Task input field -->
     <div class="input-group col-sm-9">
       <div class="input-group-prepend">
-        <label class="input-group-text enter-task">Add Task</label>
+        <button class="input-group-text enter-task">Add Task</button>
+        <div class="priority-dropdown">
+          <button class="set-priority-button">Priority</button>
+            <div class="dropdown-content">
+              <a id="urgent" href="#">Urgent</a>
+              <a id="important" href="#">Important</a>
+              <a id="standard" href="#">Standard</a>
+              <a id="no-rush" href="#">No rush</a>
+            </div>
+        </div>
       </div>
       <input class="key form-control" type="text">
     </div>

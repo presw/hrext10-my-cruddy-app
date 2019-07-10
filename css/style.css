@@ -20,11 +20,11 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 }
 
 .task-container {
-  margin-top:  10px;
+  margin-top:  15px;
 }
 
 .checkbox {
-  background-color: blue;
+  /* background-color: blue; */
   border:  solid black 2px;
 }
 
@@ -38,11 +38,36 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 
 .show-completed {
   margin: 10px;
+  width: 250px;
 }
 
-.list-manipulations {
+.list-manipulation {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 15px;
 }
+
+.sort-by {
+  display: flex;
+  align-items: center;
+  border: solid black 2px;
+  border-radius: 34px;
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 41px;
+  padding-top: 5px;
+}
+
+.sort-by-button {
+  border-radius: 25px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+}
+
+.sort-by-button:hover {background-color: seagreen;}
+
+.dropdown-content .sort-options:hover {background-color: lightblue;}
 
 #show-completed-switch {
   margin-bottom: -5px;
@@ -58,6 +83,7 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 
 .show-completed {
   display: flex;
+  margin: 0px;
   border: 2px solid black;
   padding-left: 10px;
   border-radius: 34px;
@@ -168,6 +194,7 @@ input:checked + .slider:before {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  background-color: lightgray;
 }
 
 .dropdown-content #urgent {background-color: indianred;}
@@ -180,5 +207,6 @@ input:checked + .slider:before {
 .dropdown-content #standard:hover {background-color: blue;}
 .dropdown-content #no-rush:hover {background-color: dimgray;}
 
-.priority-dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-content {display: block;}
+
 .priority-dropdown:hover .set-priority-button {background-color: blue;}

@@ -63,6 +63,7 @@ let makeTask = function(name) {
   }
   let taskObject = {
     name: name,
+    priority: undefined,
     complete: false,
     created: Date.now()
   }
@@ -144,6 +145,22 @@ $(document).ready(function() {
     }
   })();
   showDatabaseContents();
+
+  $('#urgent').on('click', function() {
+    $('.set-priority-button').text('Urgent').css('background-color', 'red');
+  });
+
+  $('#important').on('click', function() {
+    $('.set-priority-button').text('Important').css('background-color', 'darkorange');
+  });
+
+  $('#standard').on('click', function() {
+    $('.set-priority-button').text('Standard').css('background-color', 'blue');
+  });
+
+  $('#no-rush').on('click', function() {
+    $('.set-priority-button').text('No rush').css('background-color', 'dimgray');
+  });
 
   // Enter key when focused on add task field
   $('.key').on('keypress', function(event) {

@@ -30,8 +30,13 @@ let getKeyValue = function(key) {
   return JSON.parse(window.localStorage.getItem(key));
 };
 
-let setPriority = function(priority) {
-  return updateItem('setPriority', priority);
+let setPriority = function(name, level, color) {
+  let priorityObject = {
+    name: name,
+    level: level,
+    color: color
+  }
+  return updateItem('setPriority', priorityObject);
 };
 
 // Setup
@@ -61,7 +66,7 @@ let makeTask = function(name) {
   let taskObject = {
     'name': name,
     'id': taskNum(),
-    'Priority': getKeyValue('setPriority'),
+    'Priority': getKeyValue('setPriority')['level'],
     'complete': false,
     'Date created': Date.now()
   }
@@ -87,7 +92,6 @@ let addTaskToBody = function(taskId, taskName) {
   } else if (priority === 3) {
     priorityColor = 'red';
   }
-  console.log(priorityColor);
   let $task = `<div class="input-group mb-2 task-row">` +
     `<div class="input-group-prepend">` +
     `<div class="input-group-text checkbox" style="background-color: ${priorityColor}">` +
@@ -109,7 +113,12 @@ let addTaskToBody = function(taskId, taskName) {
 // Basic Page Setup
 (function() {
   if (getKeyValue('setPriority') === null) {
-    createItem('setPriority', 1);
+    let priorityObj = {
+      name: 'Standard',
+      level: 1,
+      color: 'blue'
+    };
+    createItem('setPriority', priorityObj);
   }
   if (getKeyValue('sortBy') === null) {
     createItem('sortBy', 'Date created');
@@ -128,7 +137,6 @@ let addTaskToBody = function(taskId, taskName) {
 
 let sort = function(arr, parameter) {
   return arr.sort(function(a, b) {
-    console.log(parseInt(a[parameter]));
     return parseInt(a[parameter]) - parseInt(b[parameter]);
   })
 };
@@ -185,41 +193,63 @@ $(document).ready(function() {
       document.querySelector('#completed-switch').checked = true;
     }
     $('.sort-by-button').text(getKeyValue('sortBy'));
+    let priority = getKeyValue('setPriority');
+    console.log(priority.color);
+    $('.set-priority-button').text(priority.name).css('background-color', priority.color);
   })();
   showDatabaseContents(getKeyValue('sortBy'));
 
 // Priority drop-down buttons:
+
+  $('.set-priority-button').mouseenter(function() {
+    $('.priority-selection').show();
+  });
+
   $('#urgent').on('click', function() {
-    $('.set-priority-button').text('Urgent').css('background-color', 'red');
-    setPriority(3);
+    $('.set-priority-button').text($(this).text()).css('background-color', 'red');
+    setPriority($(this).text(), 3, 'red');
+    $('.key').focus();
+    $(this).offsetParent().hide();
   });
 
   $('#important').on('click', function() {
-    $('.set-priority-button').text('Important').css('background-color', 'darkorange');
-    setPriority(2);
+    $('.set-priority-button').text($(this).text()).css('background-color', 'darkorange');
+    setPriority($(this).text(), 2, 'darkOrange');
+    $('.key').focus();
+    $(this).offsetParent().hide();
   });
 
   $('#standard').on('click', function() {
-    $('.set-priority-button').text('Standard').css('background-color', 'blue');
-    setPriority(1);
+    $('.set-priority-button').text($(this).text()).css('background-color', 'blue');
+    setPriority($(this).text(), 1, 'blue');
+    $('.key').focus();
+    $(this).offsetParent().hide();
   });
 
   $('#no-rush').on('click', function() {
-    $('.set-priority-button').text('No rush').css('background-color', 'dimgray');
-    setPriority(0);
+    $('.set-priority-button').text($(this).text()).css('background-color', 'dimgray');
+    setPriority($(this).text(), 0, 'dimgray');
+    $('.key').focus();
+    $(this).offsetParent().hide();
   });
 
 // Sort-by drop-down buttons:
+  $('.sort-by-button').on('click', function() {
+    $('.sort-by-selection').toggle();
+  })
+
   $('#date-created').on('click', function() {
     $('.sort-by-button').text('Date created');
     updateItem('sortBy', 'Date created');
     showDatabaseContents('Date created');
+    $(this).offsetParent().hide();
   });
 
   $('#priority').on('click', function() {
     $('.sort-by-button').text('Priority');
     updateItem('sortBy', 'Priority');
     showDatabaseContents('Priority');
+    $(this).offsetParent().hide();
   });
 
   // Enter key when focused on add task field

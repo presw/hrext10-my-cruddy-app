@@ -7,7 +7,6 @@
 */
 
 // localStorage functions
-
 let createItem = function(key, value) {
   value = JSON.stringify(value);
   return window.localStorage.setItem(key, value);
@@ -40,7 +39,6 @@ let setPriority = function(name, level, color) {
 };
 
 // Setup
-
 let taskCounter = function() {
   let taskCount;
   if (getKeyValue('taskCount') !== null) {
@@ -127,10 +125,15 @@ let addTaskToBody = function(taskId, taskName) {
     createItem('hasIntroRun', false);
   }
   if (getKeyValue('hasIntroRun') === false) {
-    let intro1 = makeTask('Type in the field above and press "enter" to create a task.');
-    let intro2 = makeTask('<-- Click the checkbox to complete a task.');
+    let intro1 = makeTask('<-- Click the checkbox to complete a task.');
+    let intro2 = makeTask('Hover over "Standard" next to task entry to select a priority.');
+    intro2['Priority'] = 2;
+    let intro3 = makeTask('Type in the field above and press "enter" to create a task.');
+    intro1['Date created'] += 2;
+    intro2['Date created'] += 1;
     createItem(intro1.id, intro1);
     createItem(intro2.id, intro2);
+    createItem(intro3.id, intro3);
     updateItem('hasIntroRun', true);
   }
 })();
@@ -181,11 +184,6 @@ let getValueInput = function() {
   return $('.value').val();
 };
 
-let resetInputs = function() {
-  $('.key').val('');
-  $('.value').val('');
-};
-
 // Document ready
 $(document).ready(function() {
   (function() {
@@ -194,13 +192,11 @@ $(document).ready(function() {
     }
     $('.sort-by-button').text(getKeyValue('sortBy'));
     let priority = getKeyValue('setPriority');
-    console.log(priority.color);
     $('.set-priority-button').text(priority.name).css('background-color', priority.color);
   })();
   showDatabaseContents(getKeyValue('sortBy'));
 
 // Priority drop-down buttons:
-
   $('.set-priority-button').mouseenter(function() {
     $('.priority-selection').show();
   });
@@ -289,59 +285,11 @@ $(document).ready(function() {
     showDatabaseContents(getKeyValue('sortBy'));
   });
 
-  $('.create').click(function() {
-    if (getKeyInput() !== '' && getValueInput() !== '') {
-      if (keyExists(getKeyInput())) {
-        if(confirm('key already exists in database, do you want to update instead?')) {
-          updateItem(getKeyInput(), getValueInput());
-          showDatabaseContents();
-        }
-      } else {
-        createItem(getKeyInput(), getValueInput());
-        showDatabaseContents();
-        resetInputs();
-      }
-    } else  {
-      alert('key and value must not be blank');
-    }
-  });
-
-  $('.update').click(function() {
-    if (getKeyInput() !== '' && getValueInput() !== '') {
-      if (keyExists(getKeyInput())) {
-        updateItem(getKeyInput(), getValueInput());
-        showDatabaseContents();
-        resetInputs();
-      } else {
-        alert('key does not exist in database');
-      }
-    } else {
-      alert('key and value must not be blank');
-    }
-  });
-
-  $('.delete').click(function() {
-     if (getKeyInput() !== '') {
-      if (keyExists(getKeyInput())) {
-        deleteItem(getKeyInput());
-        showDatabaseContents();
-        resetInputs();
-      } else {
-        alert('key does not exist in database');
-      }
-    } else {
-      alert('key must not be blank');
-    }
-  });
-
-  $('.reset').click(function() {
-    resetInputs();
-  })
-
   $('.clear').click(function() {
     if (confirm('WARNING: Are you sure you want to clear the database? \n                THIS ACTION CANNOT BE UNDONE')) {
       clearDatabase();
       showDatabaseContents();
     }
-  })
-})
+  });
+
+});

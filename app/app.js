@@ -1,7 +1,7 @@
 /*
 
  ### Basic Reqs
-- [ ] Where to store data? (localstorage)
+- [ ] Where to store data? (localStorage)
 - [ ] How to modify data? (update action, delete action)
 
 */
@@ -11,37 +11,32 @@
 let createItem = function(key, value) {
   value = JSON.stringify(value);
   return window.localStorage.setItem(key, value);
-}
+};
 
 let updateItem = function(key, value) {
   value = JSON.stringify(value);
   return window.localStorage.setItem(key, value);
-}
+};
 
 let deleteItem = function(key) {
   return window.localStorage.removeItem(key);
-}
+};
 
 let clearDatabase = function() {
   return window.localStorage.clear();
-}
+};
 
 let getKeyValue = function(key) {
-  return window.localStorage.getItem(key);
-}
+  return JSON.parse(window.localStorage.getItem(key));
+};
 
-let getKeyObject = function(key) {
-  let result = getKeyValue(key);
-  if (key !== 'taskCount') {
-    return JSON.parse(result);
-  } else {
-    return result;
-  }
-}
+// let getKeyObject = function(key) {
+//   return getKeyValue(key);
+// };
 
 let setPriority = function(priority) {
   return updateItem('setPriority', priority);
-}
+};
 
 // Setup
 
@@ -59,23 +54,23 @@ let taskCounter = function() {
     updateItem('taskCount', taskCount);
     return taskNum;
   }
-}
+};
+
+let taskNum = taskCounter();
 
 let makeTask = function(name) {
   if (name === undefined) {
     name = getKeyInput();
   }
-  // let priority = getKeyValue('setPriority');
   let taskObject = {
-    name: name,
-    priority: getKeyValue('setPriority'),
-    complete: false,
-    created: Date.now()
+    'name': name,
+    'id': taskNum(),
+    'Priority': getKeyValue('setPriority'),
+    'complete': false,
+    'Date created': Date.now()
   }
   return taskObject;
-}
-
-let taskNum = taskCounter();
+};
 
 (function() {
   if (getKeyValue('showComplete') === undefined) {
@@ -85,18 +80,18 @@ let taskNum = taskCounter();
 
 // Jquery functions
 let addTaskToBody = function(taskId, taskName) {
-  let taskObj = getKeyObject(taskId);
+  let taskObj = getKeyValue(taskId);
 
   let priorityColor = 'blue';
-  let priority = taskObj.priority;
-  if (priority === '0') {
+  let priority = taskObj['Priority'];
+  if (priority === 0) {
     priorityColor = 'dimgray';
-  } else if (priority === '2') {
+  } else if (priority === 2) {
     priorityColor = 'darkorange';
-  } else if (priority === '3') {
+  } else if (priority === 3) {
     priorityColor = 'red';
   }
-
+  console.log(priorityColor);
   let $task = `<div class="input-group mb-2 task-row">` +
     `<div class="input-group-prepend">` +
     `<div class="input-group-text checkbox" style="background-color: ${priorityColor}">` +
@@ -120,28 +115,56 @@ let addTaskToBody = function(taskId, taskName) {
   if (getKeyValue('setPriority') === null) {
     createItem('setPriority', 1);
   }
+  if (getKeyValue('sortBy') === null) {
+    createItem('sortBy', 'Date created');
+  }
   if (getKeyValue('hasIntroRun') === null) {
     createItem('hasIntroRun', false);
   }
-  if (getKeyValue('hasIntroRun') === 'false') {
-    let intro1 = makeTask('Type in the field above and press "enter" to create a task.')
-    let intro2 = makeTask('<-- Click the checkbox to complete a task.')
-    createItem(taskNum(), intro1);
-    createItem(taskNum(), intro2);
+  if (getKeyValue('hasIntroRun') === false) {
+    let intro1 = makeTask('Type in the field above and press "enter" to create a task.');
+    let intro2 = makeTask('<-- Click the checkbox to complete a task.');
+    createItem(intro1.id, intro1);
+    createItem(intro2.id, intro2);
     updateItem('hasIntroRun', true);
   }
 })();
 
-let showDatabaseContents = function() {
+let sort = function(arr, parameter) {
+  return arr.sort(function(a, b) {
+    console.log(parseInt(a[parameter]));
+    return parseInt(a[parameter]) - parseInt(b[parameter]);
+  })
+};
+
+let sortedArray = function(parameter) {
+
+  let output = [];
+
+  for (let i = 0; i < window.localStorage.length; i++) {
+    let key = window.localStorage.key(i);
+    let value = getKeyValue(key);
+    if (typeof value.complete !== 'undefined') {
+      output.push(value);
+    }
+  }
+  return sort(output, parameter);
+};
+
+let showDatabaseContents = function(sortBy, reverse) {
   $('.task-container').html('');
 
-  for (var i = 0; i < window.localStorage.length; i++) {
-    let key = window.localStorage.key(i);
-    let value = getKeyObject(key);
-    if (getKeyValue('showComplete') === 'true') {
-      addTaskToBody(key, value.name);
-    } else if (value.complete === false) {
-      addTaskToBody(key, value.name);
+  let taskArray = sortedArray(sortBy);
+  if (typeof reverse !== 'undefined') {
+    taskArray = taskArray.reverse();
+  }
+
+  for (let i = 0; i < taskArray.length; i++) {
+    let task = taskArray[i];
+    if (getKeyValue('showComplete') === true) {
+      addTaskToBody(task.id, task.name);
+    } else if (task.complete === false) {
+      addTaskToBody(task.id, task.name);
     }
   }
 };
@@ -159,23 +182,17 @@ let resetInputs = function() {
   $('.value').val('');
 };
 
-let sortedArray = function(parameter) {
-  // Objective: Given a parameter, provide an ordered array of tasks based on parameter
-
-  // iterate through localStorage to obtain an array of tasks
-  // sort array of tasks based on parameter
-  // return array
-}
-
 // Document ready
 $(document).ready(function() {
   (function() {
-    if (getKeyValue('showComplete') === 'true') {
+    if (getKeyValue('showComplete') === true) {
       document.querySelector('#completed-switch').checked = true;
     }
+    $('.sort-by-button').text(getKeyValue('sortBy'));
   })();
-  showDatabaseContents();
+  showDatabaseContents(getKeyValue('sortBy'));
 
+// Priority drop-down buttons:
   $('#urgent').on('click', function() {
     $('.set-priority-button').text('Urgent').css('background-color', 'red');
     setPriority(3);
@@ -196,14 +213,26 @@ $(document).ready(function() {
     setPriority(0);
   });
 
+// Sort-by drop-down buttons:
+  $('#date-created').on('click', function() {
+    $('.sort-by-button').text('Date created');
+    updateItem('sortBy', 'Date created');
+    showDatabaseContents('Date created');
+  });
+
+  $('#priority').on('click', function() {
+    $('.sort-by-button').text('Priority');
+    updateItem('sortBy', 'Priority');
+    showDatabaseContents('Priority');
+  });
+
   // Enter key when focused on add task field
   $('.key').on('keypress', function(event) {
     if (event.which === 13) {
       if (getKeyInput() !== '') {
         let task = makeTask();
-        let id = taskNum();
-        createItem(id, task);
-        addTaskToBody(id, task.name);
+        createItem(task.id, task);
+        addTaskToBody(task.id, task.name);
         resetInputs();
       } else {
         alert('Please enter a task.');
@@ -214,7 +243,7 @@ $(document).ready(function() {
   // Clicking task checkbox
   $('.task-container').on('click', '#task-checkbox', function() {
     let taskId = $(this).offsetParent()[0].childNodes[1].id;
-    let task = getKeyObject(taskId);
+    let task = getKeyValue(taskId);
     if (this.checked) {
       task['complete'] = true;
       $(this).offsetParent().wrap('<s></s>');
@@ -231,7 +260,7 @@ $(document).ready(function() {
     } else {
       updateItem('showComplete', false);
     }
-    showDatabaseContents();
+    showDatabaseContents(getKeyValue('sortBy'));
   });
 
   $('.create').click(function() {

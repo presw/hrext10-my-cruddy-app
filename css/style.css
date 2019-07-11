@@ -11,6 +11,11 @@ inputs (border swag)
 https://getbootstrap.com/docs/4.3/getting-started/introduction/
 */
 
+.header {
+  display: flex;
+  justify-content: center;
+}
+
 .body {
   background-color: lightblue;
 }
@@ -243,6 +248,7 @@ input:checked + .slider:before {
 }
 
 /* Modal Content */
+
 .task-modal-content {
   position: relative;
   background-color: #fefefe;
@@ -254,7 +260,14 @@ input:checked + .slider:before {
   -webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
-  animation-duration: 0.4s
+  animation-duration: 0.4s;
+  height: 80%;
+}
+
+.task-description {
+  width: 50%;
+  min-height: 100px;
+  position: relative;
 }
 
 /* Add Animation */

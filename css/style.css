@@ -30,6 +30,9 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 
 .task-name {
   border:  solid black 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .task-row {

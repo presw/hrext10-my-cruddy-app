@@ -30,10 +30,6 @@ let getKeyValue = function(key) {
   return JSON.parse(window.localStorage.getItem(key));
 };
 
-// let getKeyObject = function(key) {
-//   return getKeyValue(key);
-// };
-
 let setPriority = function(priority) {
   return updateItem('setPriority', priority);
 };

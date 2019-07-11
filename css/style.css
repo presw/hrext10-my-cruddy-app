@@ -15,6 +15,9 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   background-color: lightblue;
 }
 
+.task-entry {
+}
+
 .enter-task {
   background-color: goldenrod;
 }
@@ -41,7 +44,7 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 
 .show-completed {
   margin: 10px;
-  width: 250px;
+  min-width: 235px;
 }
 
 .list-manipulation {
@@ -60,12 +63,17 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   padding-right: 5px;
   height: 41px;
   padding-top: 5px;
+  min-width: 190px;
+  margin-right: 10px;
 }
 
 .sort-by-button {
   border-radius: 25px;
   margin-bottom: 5px;
   margin-left: 5px;
+  max-height: 32px;
+  min-width: 95px;
+  width: 100%;
 }
 
 .sort-by-button:hover {background-color: seagreen;}
@@ -94,6 +102,8 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   align-items: center;
   justify-items: center;
   text-align: center;
+  min-width: 250px;
+  margin-left: 10px;
 }
 
 input[type=checkbox]
@@ -177,6 +187,8 @@ input:checked + .slider:before {
   font-size: 16px;
   border-left: none;
   width: 85px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 .priority-dropdown {

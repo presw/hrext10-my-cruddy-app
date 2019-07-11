@@ -14,24 +14,8 @@
 <body class="m-3 body">
   <div class="container">
     <header class="header">Welcome to Tasks!</header>
-    <!-- Task input field -->
-    <div class="input-group col-sm-9">
-      <div class="input-group-prepend">
-        <button class="input-group-text enter-task">Add Task</button>
-        <div class="priority-dropdown dropdown">
-          <button class="set-priority-button">Standard</button>
-            <div class="dropdown-content priority-selection">
-              <a id="urgent" href="#">Urgent</a>
-              <a id="important" href="#">Important</a>
-              <a id="standard" href="#">Standard</a>
-              <a id="no-rush" href="#">No rush</a>
-            </div>
-        </div>
-      </div>
-      <input class="key form-control" type="text">
-    </div>
-    <!-- Task list manipulation content -->
     <div class="list-manipulation">
+      <!-- Sort by dropdown -->
       <div class="sort-by">
         <div><h6>Sort by:</h6></div>
         <div class="sort-by-dropdown dropdown">
@@ -42,6 +26,22 @@
           </div>
         </div>
       </div>
+      <!-- Task input field -->
+      <div class="input-group task-entry">
+        <div class="input-group-prepend">
+          <div class="priority-dropdown dropdown">
+            <button class="set-priority-button">Standard</button>
+              <div class="dropdown-content priority-selection">
+                <a id="urgent" href="#">Urgent</a>
+                <a id="important" href="#">Important</a>
+                <a id="standard" href="#">Standard</a>
+                <a id="no-rush" href="#">No rush</a>
+              </div>
+          </div>
+        </div>
+        <input class="key form-control" type="text" placeholder="Add a task">
+      </div>
+      <!-- Show completed toggle -->
       <div class="show-completed">
         <div class="show-completed-text"><h6>Show completed tasks:</h6></div>
         <div id="show-completed-switch">
@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <!-- Tasks appear below here -->
+    <!-- Tasks appear inside here -->
     <div class="task-container"></div>
   <script src="app/app.js"></script>
 </body>

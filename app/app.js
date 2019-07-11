@@ -66,7 +66,9 @@ let makeTask = function(name) {
     'id': taskNum(),
     'Priority': getKeyValue('setPriority')['level'],
     'complete': false,
-    'Date created': Date.now()
+    'Date created': Date.now(),
+    'Date due': null,
+    'dueDateMs': null
   }
   return taskObject;
 };
@@ -120,6 +122,9 @@ let addTaskToBody = function(taskId, taskName) {
   }
   if (getKeyValue('sortBy') === null) {
     createItem('sortBy', 'Date created');
+  }
+  if (getKeyValue('modalTask') === null) {
+    createItem('modalTask', '');
   }
   if (getKeyValue('hasIntroRun') === null) {
     createItem('hasIntroRun', false);
@@ -189,6 +194,23 @@ let resetInputs = function() {
   $('.value').val('');
 };
 
+let prepareDate = function(dateString) {
+  let [month, day, year] = dateString.split('/');
+  return [year, month - 1, day];
+};
+
+let saveModalAndClose = function() {
+  let taskId = getKeyValue('modalTask');
+  let task = getKeyValue(taskId);
+  let date = $('#datepicker').val();
+  task['Date due'] = date;
+  date = prepareDate(date);
+  date = new Date(...date).getTime();
+  task['dueDateMs'] = date;
+  updateItem(taskId, task);
+  $('#datepicker').val('');
+  $('#task-modal').css('display', 'none');
+};
 
 // Document ready
 $(document).ready(function() {
@@ -204,17 +226,29 @@ $(document).ready(function() {
 
 // Modal clicks
   $('.task-container').on('click', '.task-name', function() {
+    $('#datepicker').datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+    let taskId = $(this)[0].id;
+    let task = getKeyValue(taskId);
+    if (task['Date due'] !== null) {
+      $('#datepicker').val(task['Date due']);
+    }
+    updateItem('modalTask', taskId);
+
     $('#task-modal').css('display', 'block');
     $('.task-modal-header').text($(this).text()).wrap('<h2></h2>');
+    $('.task-modal-header').append('<span class="close">&times;</span>')
   });
 
-  $('.close').on('click', function() {
-    $('#task-modal').css('display', 'none');
+  $(document).on('click', '.close', function() {
+    saveModalAndClose();
   });
 
   $(document).on('click', function() {
     if (event.target.className === 'modal') {
-      $('#task-modal').css('display', 'none');
+      saveModalAndClose();
     }
   });
 

@@ -19,8 +19,8 @@
       <div class="input-group-prepend">
         <button class="input-group-text enter-task">Add Task</button>
         <div class="priority-dropdown dropdown">
-          <button class="set-priority-button">Priority</button>
-            <div class="dropdown-content">
+          <button class="set-priority-button">Standard</button>
+            <div class="dropdown-content priority-selection">
               <a id="urgent" href="#">Urgent</a>
               <a id="important" href="#">Important</a>
               <a id="standard" href="#">Standard</a>
@@ -30,12 +30,13 @@
       </div>
       <input class="key form-control" type="text">
     </div>
+    <!-- Task list manipulation content -->
     <div class="list-manipulation">
       <div class="sort-by">
         <div><h6>Sort by:</h6></div>
         <div class="sort-by-dropdown dropdown">
           <button class="sort-by-button">Date created</button>
-          <div class="dropdown-content">
+          <div id="sort-by" class="dropdown-content sort-by-selection">
             <a class="sort-options" id="date-created" href="#">Date created</a>
             <a class="sort-options" id="priority" href="#">Priority</a>
           </div>

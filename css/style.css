@@ -207,6 +207,6 @@ input:checked + .slider:before {
 .dropdown-content #standard:hover {background-color: blue;}
 .dropdown-content #no-rush:hover {background-color: dimgray;}
 
-.dropdown:hover .dropdown-content {display: block;}
+.priority-dropdown:hover .dropdown-content {display: block;}
 
 .priority-dropdown:hover .set-priority-button {background-color: blue;}

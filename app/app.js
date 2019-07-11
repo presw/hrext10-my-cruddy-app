@@ -184,6 +184,12 @@ let getValueInput = function() {
   return $('.value').val();
 };
 
+let resetInputs = function() {
+  $('.key').val('');
+  $('.value').val('');
+};
+
+
 // Document ready
 $(document).ready(function() {
   (function() {
@@ -195,6 +201,22 @@ $(document).ready(function() {
     $('.set-priority-button').text(priority.name).css('background-color', priority.color);
   })();
   showDatabaseContents(getKeyValue('sortBy'));
+
+// Modal clicks
+  $('.task-container').on('click', '.task-name', function() {
+    $('#task-modal').css('display', 'block');
+    $('.task-modal-header').text($(this).text()).wrap('<h2></h2>');
+  });
+
+  $('.close').on('click', function() {
+    $('#task-modal').css('display', 'none');
+  });
+
+  $(document).on('click', function() {
+    if (event.target.className === 'modal') {
+      $('#task-modal').css('display', 'none');
+    }
+  });
 
 // Priority drop-down buttons:
   $('.set-priority-button').mouseenter(function() {

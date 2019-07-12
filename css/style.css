@@ -136,8 +136,6 @@ input[type=checkbox]
   -moz-transform: scale(1.25); /* FF */
   -webkit-transform: scale(1.25); /* Safari and Chrome */
   -o-transform: scale(1.25); /* Opera */
-  padding: 10px;
-  margin-bottom: 3px;
 }
 
 /* Toggle for Show Completed Tasks */

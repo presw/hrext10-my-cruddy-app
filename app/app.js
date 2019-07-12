@@ -124,6 +124,7 @@ let addTaskToBody = function(taskId, taskName) {
   if (getKeyValue('sortBy') === null) {
     let sortBy = {
       method: 'Date created',
+      display: 'Newest',
       reverse: false
     }
     createItem('sortBy', sortBy);
@@ -232,11 +233,15 @@ let saveModalAndClose = function() {
   $('#' + taskId)[0].childNodes[1].innerText = task['dateFormatted'];
 };
 
-let sortAndDisplay = function(sortMethod, reverseBoolean) {
-  $('.sort-by-button').text(sortMethod);
+let sortAndDisplay = function(sortMethod, reverseBoolean, display) {
+  if (typeof display === 'undefined') {
+    display = sortMethod;
+  }
+  $('.sort-by-button').text(display);
   let sort = getKeyValue('sortBy');
   sort.method = sortMethod;
   sort.reverse = reverseBoolean;
+  sort.display = display;
   updateItem('sortBy', sort);
   showDatabaseContents();
 }
@@ -247,7 +252,7 @@ $(document).ready(function() {
     if (getKeyValue('showComplete') === true) {
       document.querySelector('#completed-switch').checked = true;
     }
-    $('.sort-by-button').text(getKeyValue('sortBy')['method']);
+    $('.sort-by-button').text(getKeyValue('sortBy')['display']);
     let priority = getKeyValue('setPriority');
     $('.set-priority-button').text(priority.name).css('background-color', priority.color);
   })();
@@ -320,8 +325,13 @@ $(document).ready(function() {
     $('.sort-by-selection').toggle();
   })
 
-  $('#date-created').on('click', function() {
-    sortAndDisplay('Date created', false);
+  $('#newest').on('click', function() {
+    sortAndDisplay('Date created', false, 'Newest');
+    $(this).offsetParent().hide();
+  });
+
+  $('#oldest').on('click', function() {
+    sortAndDisplay('Date created', true, 'Oldest');
     $(this).offsetParent().hide();
   });
 

@@ -7,6 +7,14 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   justify-content: center;
 }
 
+.title {
+  color: white;
+  background-color: #4f76f5;
+  padding: 10px;
+  border-radius: 30px;
+  border: solid black 1px;
+}
+
 .delete-buttons {
   float: right;
   margin-top: -45px;
@@ -22,11 +30,16 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 }
 
 .body {
-  background-color: lightblue;
+  background-color: #4eafe0;
 }
 
-.enter-task {
-  background-color: goldenrod;
+.key {
+  border: solid black 2px;
+}
+
+.list-manipulation-button {
+  background-color: #4f76f5;
+  color: white;
 }
 
 .task-container {
@@ -34,13 +47,15 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 }
 
 .checkbox {
-  border:  solid black 2px;
+  border: solid black 2px;
+  border-right: none;
 }
 
 .task-details {
   display: flex;
   justify-content: space-between;
   border: solid black 2px;
+  cursor: pointer;
 }
 
 .task-date {
@@ -73,7 +88,7 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 .sort-by {
   display: flex;
   align-items: center;
-  border: solid black 2px;
+  border: solid black 1px;
   border-radius: 34px;
   padding-left: 5px;
   padding-right: 5px;
@@ -90,9 +105,8 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   max-height: 32px;
   min-width: 95px;
   width: 100%;
+  border: 0px;
 }
-
-.sort-by-button:hover {background-color: seagreen;}
 
 .sort-by-dropdown:hover .dropdown-content {display: block;}
 
@@ -101,7 +115,7 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   display: inline-block;
 }
 
-.dropdown-content .sort-options:hover {background-color: lightblue;}
+.dropdown-content .sort-options:hover {background-color: #714ae6;}
 
 #show-completed-switch {
   margin-bottom: -5px;
@@ -118,7 +132,7 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 .show-completed {
   display: flex;
   margin: 0px;
-  border: 2px solid black;
+  border: 1px solid black;
   padding-left: 10px;
   border-radius: 34px;
   align-content: center;
@@ -204,9 +218,10 @@ input:checked + .slider:before {
 .set-priority-button {
   background-color: royalblue;
   color: white;
-  padding: 6px;
+  padding: 5px;
   font-size: 16px;
-  border-left: none;
+  border: solid black 2px;
+  border-right: none;
   width: 85px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
@@ -230,7 +245,7 @@ input:checked + .slider:before {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
-  background-color: lightgray;
+  background-color: darkgray;
 }
 
 .dropdown-content #urgent {background-color: indianred;}
@@ -268,15 +283,26 @@ input:checked + .slider:before {
   background-color: #fefefe;
   margin: auto;
   padding: 0;
-  border: 1px solid #888;
+  border: none;
+  border-radius: 15px;
   width: 80%;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  box-shadow: 5px 8px 16px 5px rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.4);
   -webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
   animation-duration: 0.4s;
   height: 80%;
 }
+
+.task-modal-header {
+  padding: 2px 16px;
+  background-color: #714ae6;
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.task-modal-body {padding: 2px 16px;}
 
 .task-description {
   width: 50%;
@@ -309,11 +335,3 @@ input:checked + .slider:before {
   text-decoration: none;
   cursor: pointer;
 }
-
-.task-modal-header {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-}
-
-.task-modal-body {padding: 2px 16px;}

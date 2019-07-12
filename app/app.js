@@ -68,7 +68,8 @@ let makeTask = function(name) {
     'complete': false,
     'Date created': Date.now(),
     'Due date': null,
-    'dateFormatted': ""
+    'dateFormatted': "",
+    'description': ""
   }
   return taskObject;
 };
@@ -223,12 +224,15 @@ let saveModalAndClose = function() {
   let taskId = getKeyValue('modalTask');
   let task = getKeyValue(taskId);
   let date = $('#datepicker').val();
+  let description = $('.task-description').val();
   task['dateFormatted'] = date;
   date = prepareDate(date);
   date = new Date(...date).getTime();
   task['Due date'] = date;
+  task['description'] = description;
   updateItem(taskId, task);
   $('#datepicker').val('');
+  $('.task-description').val('');
   $('#task-modal').css('display', 'none');
   $('#' + taskId)[0].childNodes[1].innerText = task['dateFormatted'];
 };
@@ -270,6 +274,7 @@ $(document).ready(function() {
     if (task['dateFormatted'] !== null) {
       $('#datepicker').val(task['dateFormatted']);
     }
+    $('.task-description').val(task['description']);
     updateItem('modalTask', taskId);
 
     $('#task-modal').css('display', 'block');

@@ -7,6 +7,20 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   justify-content: center;
 }
 
+.delete-buttons {
+  float: right;
+  margin-top: -45px;
+  width: 50px;
+  height: 50px;
+}
+
+.delete-buttons:hover .dropdown-content {display: block;}
+
+.delete-options {
+  margin-right: auto;
+  margin-left: -100px;
+}
+
 .body {
   background-color: lightblue;
 }
@@ -79,6 +93,13 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 }
 
 .sort-by-button:hover {background-color: seagreen;}
+
+.sort-by-dropdown:hover .dropdown-content {display: block;}
+
+.sort-by-dropdown {
+  position: relative;
+  display: inline-block;
+}
 
 .dropdown-content .sort-options:hover {background-color: lightblue;}
 
@@ -225,8 +246,6 @@ input:checked + .slider:before {
 .dropdown-content #no-rush:hover {background-color: dimgray;}
 
 .priority-dropdown:hover .dropdown-content {display: block;}
-
-.priority-dropdown:hover .set-priority-button {background-color: blue;}
 
 /* Modal source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal2 */
 /* The Modal (background) */

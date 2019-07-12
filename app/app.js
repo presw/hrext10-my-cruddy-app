@@ -141,11 +141,14 @@ let addTaskToBody = function(taskId, taskName) {
     let intro2 = makeTask('Hover over "Standard" next to task entry to select a priority.');
     intro2['Priority'] = 2;
     let intro3 = makeTask('Type in the field above and press "enter" to create a task.');
-    intro1['Date created'] += 2;
-    intro2['Date created'] += 1;
+    let intro4 = makeTask('Click the task row to add a due date or extra details!');
+    intro1['Date created'] += 15;
+    intro2['Date created'] += 10;
+    intro3['Date created'] += 5;
     createItem(intro1.id, intro1);
     createItem(intro2.id, intro2);
     createItem(intro3.id, intro3);
+    createItem(intro4.id, intro4);
     updateItem('hasIntroRun', true);
   }
 })();
@@ -326,8 +329,8 @@ $(document).ready(function() {
   });
 
 // Sort-by drop-down buttons:
-  $('.sort-by-button').on('click', function() {
-    $('.sort-by-selection').toggle();
+  $('.sort-by-button').mouseenter(function() {
+    $('.sort-by-selection').show();
   })
 
   $('#newest').on('click', function() {
@@ -350,7 +353,7 @@ $(document).ready(function() {
     $(this).offsetParent().hide();
   });
 
-  // Enter key when focused on add task field
+// Enter key when focused on add task field
   $('.key').on('keypress', function(event) {
     if (event.which === 13) {
       if (getKeyInput() !== '') {
@@ -364,7 +367,7 @@ $(document).ready(function() {
     }
   });
 
-  // Clicking task checkbox
+// Clicking task checkbox
   $('.task-container').on('click', '#task-checkbox', function() {
     let taskId = $(this).offsetParent()[0].childNodes[1].id;
     let task = getKeyValue(taskId);
@@ -380,6 +383,7 @@ $(document).ready(function() {
     updateItem(taskId, task);
   });
 
+// Completed toggle
   $('#completed-switch').on('click', function() {
     if (event.target.checked === true) {
       updateItem('showComplete', true);
@@ -389,10 +393,28 @@ $(document).ready(function() {
     showDatabaseContents();
   });
 
-  $('.clear').click(function() {
+// Clear database options
+  $('#delete-completed').on('click', function() {
+    if (confirm('WARNING: This will delete all completed tasks!')) {
+      let deleteArray = [];
+      for (let i = 0; i < window.localStorage.length; i++) {
+        let key = window.localStorage.key(i);
+        let value = getKeyValue(key);
+        if (value.complete === true) {
+          deleteArray.push(key);
+        }
+      }
+      deleteArray.forEach(function(item) {
+        deleteItem(item);
+      });
+      showDatabaseContents();
+    }
+  });
+
+  $('#clear-database').on('click', function() {
     if (confirm('WARNING: Are you sure you want to clear the database? \n                THIS ACTION CANNOT BE UNDONE')) {
       clearDatabase();
-      showDatabaseContents();
+      window.location.reload();
     }
   });
 

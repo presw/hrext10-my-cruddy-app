@@ -15,7 +15,9 @@
  </head>
 <body class="m-3 body">
   <div class="container">
-    <header class="header"><h1>Welcome to HREXTasks!</h1></header>
+    <header class="header">
+      <div class="title"><h1>Welcome to HREXTasks!</h1></div>
+    </header>
     <div class="delete-buttons">
       <button type="submit" style="border: 0; background: transparent" id="settings-button">
         <img src="images/Settings.png" width="40" height="40" alt="submit">
@@ -27,7 +29,7 @@
     </div>
     <div class="list-manipulation">
       <!-- Sort by dropdown -->
-      <div class="sort-by">
+      <div class="sort-by list-manipulation-button">
         <div><h6>Sort by:</h6></div>
         <div class="sort-by-dropdown dropdown">
           <button class="sort-by-button">""</button>
@@ -55,7 +57,7 @@
         <input class="key form-control" type="text" placeholder="Add a task">
       </div>
       <!-- Show completed toggle -->
-      <div class="show-completed">
+      <div class="show-completed list-manipulation-button">
         <div class="show-completed-text"><h6>Show completed tasks:</h6></div>
         <div id="show-completed-switch">
           <!-- NOTE: consider appending Switch on doc creation to avoid completed animation on refresh-->
@@ -78,7 +80,6 @@
         </div>
         <div class="task-modal-body">
           <p>Date: <input type="text" id="datepicker"></p>
-          <p>Some text in the Modal Body</p>
           <p>Task Details:</p>
           <textarea class="task-description"></textarea>
         </div>

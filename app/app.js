@@ -140,15 +140,21 @@ let addTaskToBody = function(taskId, taskName) {
     let intro1 = makeTask('<-- Click the checkbox to complete a task.');
     let intro2 = makeTask('Hover over "Standard" next to task entry to select a priority.');
     intro2['Priority'] = 2;
-    let intro3 = makeTask('Type in the field above and press "enter" to create a task.');
+    let intro3 = makeTask('Type in the "Add a task" field and press "enter" to create a task.');
     let intro4 = makeTask('Click the task row to add a due date or extra details!');
-    intro1['Date created'] += 15;
-    intro2['Date created'] += 10;
-    intro3['Date created'] += 5;
+    let intro5 = makeTask('Hover over "Newest" to select a sort method.');
+    let intro6 = makeTask('Click the "Show completed tasks" toggle to display everything.');
+    intro1['Date created'] += 25;
+    intro2['Date created'] += 20;
+    intro3['Date created'] += 15;
+    intro4['Date created'] += 10;
+    intro5['Date created'] += 5;
     createItem(intro1.id, intro1);
     createItem(intro2.id, intro2);
     createItem(intro3.id, intro3);
     createItem(intro4.id, intro4);
+    createItem(intro5.id, intro5);
+    createItem(intro6.id, intro6);
     updateItem('hasIntroRun', true);
   }
 })();
@@ -236,6 +242,7 @@ let saveModalAndClose = function() {
   updateItem(taskId, task);
   $('#datepicker').val('');
   $('.task-description').val('');
+  $('.task-modal-header').unwrap();
   $('#task-modal').css('display', 'none');
   $('#' + taskId)[0].childNodes[1].innerText = task['dateFormatted'];
 };

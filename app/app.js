@@ -67,8 +67,8 @@ let makeTask = function(name) {
     'Priority': getKeyValue('setPriority')['level'],
     'complete': false,
     'Date created': Date.now(),
-    'Date due': null,
-    'dueDateMs': null
+    'Due date': null,
+    'dateFormatted': null
   }
   return taskObject;
 };
@@ -100,10 +100,10 @@ let addTaskToBody = function(taskId, taskName) {
 
   if (typeof taskObj.complete !== 'undefined') {
     $('.task-container').prepend($task);
-
+    $('#' + taskId).css('background-color', 'white');
     if (taskObj.complete === true) {
       $('#task-checkbox')[0].checked = true;
-      $('#' + taskId).offsetParent().wrap('<s></s>');
+      $('#' + taskId).css('background-color', 'lightgrey').offsetParent().wrap('<s></s>');
     }
   } else {
     return undefined;
@@ -121,7 +121,11 @@ let addTaskToBody = function(taskId, taskName) {
     createItem('setPriority', priorityObj);
   }
   if (getKeyValue('sortBy') === null) {
-    createItem('sortBy', 'Date created');
+    let sortBy = {
+      method: 'Date created',
+      reverse: false
+    }
+    createItem('sortBy', sortBy);
   }
   if (getKeyValue('modalTask') === null) {
     createItem('modalTask', '');
@@ -145,7 +149,15 @@ let addTaskToBody = function(taskId, taskName) {
 
 let sort = function(arr, parameter) {
   return arr.sort(function(a, b) {
-    return parseInt(a[parameter]) - parseInt(b[parameter]);
+    let compareA = a[parameter];
+    let compareB = b[parameter];
+    if (compareA === null) {
+      compareA = Infinity;
+    }
+    if (compareB === null) {
+      compareB = Infinity;
+    }
+    return parseInt(compareA) - parseInt(compareB);
   })
 };
 
@@ -163,11 +175,13 @@ let sortedArray = function(parameter) {
   return sort(output, parameter);
 };
 
-let showDatabaseContents = function(sortBy, reverse) {
+let showDatabaseContents = function() {
   $('.task-container').html('');
 
-  let taskArray = sortedArray(sortBy);
-  if (typeof reverse !== 'undefined') {
+  let sortOrder = getKeyValue('sortBy')
+
+  let taskArray = sortedArray(sortOrder.method);
+  if (sortOrder.reverse === true) {
     taskArray = taskArray.reverse();
   }
 
@@ -203,14 +217,23 @@ let saveModalAndClose = function() {
   let taskId = getKeyValue('modalTask');
   let task = getKeyValue(taskId);
   let date = $('#datepicker').val();
-  task['Date due'] = date;
+  task['dateFormatted'] = date;
   date = prepareDate(date);
   date = new Date(...date).getTime();
-  task['dueDateMs'] = date;
+  task['Due date'] = date;
   updateItem(taskId, task);
   $('#datepicker').val('');
   $('#task-modal').css('display', 'none');
 };
+
+let sortAndDisplay = function(sortMethod, reverseBoolean) {
+  $('.sort-by-button').text(sortMethod);
+  let sort = getKeyValue('sortBy');
+  sort.method = sortMethod;
+  sort.reverse = reverseBoolean;
+  updateItem('sortBy', sort);
+  showDatabaseContents();
+}
 
 // Document ready
 $(document).ready(function() {
@@ -218,11 +241,11 @@ $(document).ready(function() {
     if (getKeyValue('showComplete') === true) {
       document.querySelector('#completed-switch').checked = true;
     }
-    $('.sort-by-button').text(getKeyValue('sortBy'));
+    $('.sort-by-button').text(getKeyValue('sortBy')['method']);
     let priority = getKeyValue('setPriority');
     $('.set-priority-button').text(priority.name).css('background-color', priority.color);
   })();
-  showDatabaseContents(getKeyValue('sortBy'));
+  showDatabaseContents();
 
 // Modal clicks
   $('.task-container').on('click', '.task-name', function() {
@@ -232,8 +255,8 @@ $(document).ready(function() {
     });
     let taskId = $(this)[0].id;
     let task = getKeyValue(taskId);
-    if (task['Date due'] !== null) {
-      $('#datepicker').val(task['Date due']);
+    if (task['dateFormatted'] !== null) {
+      $('#datepicker').val(task['dateFormatted']);
     }
     updateItem('modalTask', taskId);
 
@@ -291,16 +314,17 @@ $(document).ready(function() {
   })
 
   $('#date-created').on('click', function() {
-    $('.sort-by-button').text('Date created');
-    updateItem('sortBy', 'Date created');
-    showDatabaseContents('Date created');
+    sortAndDisplay('Date created', false);
     $(this).offsetParent().hide();
   });
 
   $('#priority').on('click', function() {
-    $('.sort-by-button').text('Priority');
-    updateItem('sortBy', 'Priority');
-    showDatabaseContents('Priority');
+    sortAndDisplay('Priority', false);
+    $(this).offsetParent().hide();
+  });
+
+   $('#due-date').on('click', function() {
+    sortAndDisplay('Due date', true);
     $(this).offsetParent().hide();
   });
 
@@ -324,10 +348,12 @@ $(document).ready(function() {
     let task = getKeyValue(taskId);
     if (this.checked) {
       task['complete'] = true;
+      $('#' + taskId).css('background-color', 'lightgrey');
       $(this).offsetParent().wrap('<s></s>');
     } else {
       task['complete'] = false;
       $(this).offsetParent().unwrap();
+      $('#' + taskId).css('background-color', 'white');
     }
     updateItem(taskId, task);
   });
@@ -338,7 +364,7 @@ $(document).ready(function() {
     } else {
       updateItem('showComplete', false);
     }
-    showDatabaseContents(getKeyValue('sortBy'));
+    showDatabaseContents();
   });
 
   $('.clear').click(function() {

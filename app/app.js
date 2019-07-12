@@ -68,7 +68,7 @@ let makeTask = function(name) {
     'complete': false,
     'Date created': Date.now(),
     'Due date': null,
-    'dateFormatted': null
+    'dateFormatted': ""
   }
   return taskObject;
 };
@@ -96,7 +96,8 @@ let addTaskToBody = function(taskId, taskName) {
     `<div class="input-group-prepend">` +
     `<div class="input-group-text checkbox" style="background-color: ${priorityColor}">` +
     `<input id="task-checkbox" type="checkbox" aria-label="Checkbox for following text input"></div>` +
-    `</div><div type="text" id="${taskId}" class="form-control task-name">${taskName}</div></div>`;
+    `</div><div id="${taskId}" class="task-details form-control"><div type="text" id="${taskId}" ` +
+    `class="task-name">${taskName}</div><div class="task-date">${taskObj.dateFormatted}</div></div></div>`;
 
   if (typeof taskObj.complete !== 'undefined') {
     $('.task-container').prepend($task);
@@ -153,11 +154,15 @@ let sort = function(arr, parameter) {
     let compareB = b[parameter];
     if (compareA === null) {
       compareA = Infinity;
+    } else {
+      compareA = parseInt(compareA);
     }
     if (compareB === null) {
       compareB = Infinity;
+    } else {
+      compareB = parseInt(compareB);
     }
-    return parseInt(compareA) - parseInt(compareB);
+    return compareA - compareB;
   })
 };
 
@@ -224,6 +229,7 @@ let saveModalAndClose = function() {
   updateItem(taskId, task);
   $('#datepicker').val('');
   $('#task-modal').css('display', 'none');
+  $('#' + taskId)[0].childNodes[1].innerText = task['dateFormatted'];
 };
 
 let sortAndDisplay = function(sortMethod, reverseBoolean) {
@@ -248,12 +254,13 @@ $(document).ready(function() {
   showDatabaseContents();
 
 // Modal clicks
-  $('.task-container').on('click', '.task-name', function() {
+  $('.task-container').on('click', '.task-details', function() {
+
     $('#datepicker').datepicker({
       changeMonth: true,
       changeYear: true
     });
-    let taskId = $(this)[0].id;
+    let taskId = $(this)[0].firstChild.id;
     let task = getKeyValue(taskId);
     if (task['dateFormatted'] !== null) {
       $('#datepicker').val(task['dateFormatted']);
@@ -261,7 +268,7 @@ $(document).ready(function() {
     updateItem('modalTask', taskId);
 
     $('#task-modal').css('display', 'block');
-    $('.task-modal-header').text($(this).text()).wrap('<h2></h2>');
+    $('.task-modal-header').text($(this)[0].firstChild.innerText).wrap('<h2></h2>');
     $('.task-modal-header').append('<span class="close">&times;</span>')
   });
 

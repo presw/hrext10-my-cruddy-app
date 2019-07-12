@@ -1,13 +1,4 @@
 /*
-buttons
-table
-  header
-  other rows
-text (font for everything)
-dialog boxes (alert, confirm)
-spacing
-inputs (border swag)
-
 https://getbootstrap.com/docs/4.3/getting-started/introduction/
 */
 
@@ -20,9 +11,6 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
   background-color: lightblue;
 }
 
-.task-entry {
-}
-
 .enter-task {
   background-color: goldenrod;
 }
@@ -32,15 +20,24 @@ https://getbootstrap.com/docs/4.3/getting-started/introduction/
 }
 
 .checkbox {
-  /* background-color: blue; */
   border:  solid black 2px;
 }
 
+.task-details {
+  display: flex;
+  justify-content: space-between;
+  border: solid black 2px;
+}
+
+.task-date {
+  font-weight: bold;
+}
+
 .task-name {
-  border:  solid black 2px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  max-width: 90%;
 }
 
 .task-row {
